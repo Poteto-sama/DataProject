@@ -2,11 +2,15 @@
 Node::Node()
 {
 	right = left = NULL;
+	x = 0;
+	y = 0;
 	data = 0;
 }
 AVLNode::AVLNode()
 {
 	right = left = NULL;
+	x = 0;
+	y = 0;
 	data = 0;
 }
 AVL::AVL()
@@ -22,19 +26,25 @@ BST::BST()
 {
 	Root = NULL;
 }
-bool AVL::insert(int data, int& circX, int& circY, int& textX, int& textY)
+bool AVL::insert(int data, int& circX, int& circY, int& textX, int& textY, int& key)
 {
 	key = data % 10;
 	AVLNode* newNode = new AVLNode;
 	newNode->data = key;
 	newNode->left = NULL;
 	newNode->right = NULL;
+	circX = 550;
+	circY = 100;
+	textX = 560;
+	textY = 105;
 	if (root == NULL)
 	{
 		root = newNode;
-		circX = 550;
-		circY = 100;
-		newNode->tree.Insert(data);
+		newNode->tree.Insert(data, circX, circY, textX, textY);
+		newNode->x = circX;
+		newNode->y = circY;
+		newNode->tx = textX;
+		newNode->ty = textY;
 	}
 	else
 	{
@@ -53,8 +63,16 @@ bool AVL::insert(int data, int& circX, int& circY, int& textX, int& textY)
 				}
 				else
 				{
+					circX = circX - 50;
+					circY = circY + 50;
+					textX = textX - 50;
+					textY = textY + 50;
 					node->left = newNode;
-					node->left->tree.Insert(data);
+					node->left->tree.Insert(data, circX, circY, textX, textY);
+					newNode->x = circX;
+					newNode->y = circY;
+					newNode->tx = textX;
+					newNode->ty = textY;
 					break;
 				}
 			}
@@ -70,14 +88,22 @@ bool AVL::insert(int data, int& circX, int& circY, int& textX, int& textY)
 				}
 				else
 				{
+					circX = circX + 50;
+					circY = circY + 50;
+					textX = textX + 50;
+					textY = textY + 50;
 					node->right = newNode;
-					node->right->tree.Insert(data);
+					node->right->tree.Insert(data, circX, circY, textX, textY);
+					newNode->x = circX;
+					newNode->y = circY;
+					newNode->tx = textX;
+					newNode->ty = textY;
 					break;
 				}
 			}
 			else
 			{
-				if (node->tree.Insert(data) == false)
+				if (node->tree.Insert(data, circX, circY, textX, textY) == false)
 				{
 					return false;
 				}
@@ -85,7 +111,7 @@ bool AVL::insert(int data, int& circX, int& circY, int& textX, int& textY)
 			}
 		}
 	}
-	conversion(root);
+	conversion(root, circX, circY, textX, textY);
 	return true;
 }
 Node* AVL::search(int data)
@@ -147,30 +173,34 @@ int AVL::Height(AVLNode* node)
 		}
 	}
 }
-void AVL::conversion(AVLNode*& p)
+void AVL::conversion(AVLNode*& p , int& circX, int& circY, int& textX, int& textY)
 {
 	if (p != NULL)
 	{
-		conversion(p->left);
-		conversion(p->right);
+		conversion(p->left, circX, circY, textX, textY);
+		conversion(p->right, circX, circY, textX, textY);
 		if (bf(p) > 1)
 		{
 			if (bf(p->left) > 0)
-				rrrotation(p);
+			{
+				rrrotation(p, circX, circY, textX, textY);
+			}
 			else
 			{
-				llrotation(p->left);
-				rrrotation(p);
+				llrotation(p->left, circX, circY, textX, textY);
+				rrrotation(p, circX, circY, textX, textY);
 			}
 		}
 		else if (bf(p) < -1)
 		{
 			if (bf(p->right) < 0)
-				llrotation(p);
+			{
+				llrotation(p, circX, circY, textX, textY);
+			}
 			else
 			{
-				rrrotation(p->right);
-				llrotation(p);
+				rrrotation(p->right, circX, circY, textX, textY);
+				llrotation(p, circX, circY, textX, textY);
 			}
 		}
 	}
@@ -183,7 +213,7 @@ int AVL::bf(AVLNode* p)
 	}
 	return Height(p->left) - Height(p->right);
 }
-void AVL::rrrotation(AVLNode*& p)
+void AVL::rrrotation(AVLNode*& p, int& circX, int& circY, int& textX, int& textY)
 {
 	AVLNode* tree = p->left;
 	AVLNode* t2 = tree->right;
@@ -191,7 +221,7 @@ void AVL::rrrotation(AVLNode*& p)
 	p->left = t2;
 	p = tree;
 }
-void AVL::llrotation(AVLNode*& p)
+void AVL::llrotation(AVLNode*& p, int& circX, int& circY, int& textX, int& textY)
 {
 	AVLNode* tree = p->right;
 	AVLNode* t2 = tree->left;
@@ -200,13 +230,15 @@ void AVL::llrotation(AVLNode*& p)
 	p = tree;
 }
 
-bool BST::Insert(int data)
+bool BST::Insert(int data, int& circX, int& circY, int& textX, int& textY)
 {
 	Node* newNode = new Node;
 	newNode->data = data;
 	Node* temp = Root;
-	
-
+	//circX = 550;
+	//circY = 100;
+	//textX = 560;
+	//textY = 105;
 	if (Root == NULL)
 	{
 		Root = newNode;
@@ -221,11 +253,23 @@ bool BST::Insert(int data)
 			{
 				if (temp->left != NULL)
 				{
+					//circX = circX - 50;
+					//circY = circY + 50;
+					//textX = textX - 50;
+					//textY = textY + 50;
 					temp = temp->left;
 				}
 				else
 				{
+					//circX = circX - 50;
+					//circY = circY + 50;
+					//textX = textX - 50;
+					//textY = textY + 50;
 					temp->left = newNode;
+					//temp->x = circX;
+					//temp->y = circY;
+					//temp->tx = textX;
+					//temp->ty = textY;
 					break;
 				}
 			}
@@ -237,7 +281,15 @@ bool BST::Insert(int data)
 				}
 				else
 				{
+					//circX = circX + 50;
+					//circY = circY + 50;
+					//textX = textX + 50;
+					//textY = textY + 50;
 					temp->right = newNode;
+					//temp->x = circX;
+					//temp->y = circY;
+					//temp->tx = textX;
+					//temp->ty = textY;
 					break;
 				}
 			}
